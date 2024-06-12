@@ -2,12 +2,68 @@ import './pages/index.css';
 import { initialCards } from './scripts/cards.js';
 
 const cardContainer = document.querySelector('.places__list');
+const editForm = document.querySelector('.popup_type_edit');
+const newForm = document.querySelector('.popup_type_new-card');
+
+const nameInput = document.querySelector('.popup__input_type_name');
+const jobInput = document.querySelector('.popup__input_type_description');
+
+const profileTitle = document.querySelector('.profile__title');
+const profileDescription = document.querySelector('.profile__description');
+
+const editButton = document.querySelector('.profile__edit-button');
+const addButton = document.querySelector('.profile__add-button');
+
+const urlInput = document.querySelector('.popup__input_type_url');
+const cardNameInput = document.querySelector('.popup__input_type_card-name');
+
+const imagePopap = document.querySelector('.popup_type_image');
+
+
+///modal.js
+
+
+
+function openModal(element) {
+  element.classList.add('popup_is-opened');
+};
+
+function closeModal(element) {
+  element.classList.remove('popup_is-opened');
+};
+
+document.addEventListener('keydown', function(evt) {
+  if (evt.key === 'Escape') {
+    closeModal(editForm);
+    closeModal(newForm);
+  }
+});
+document.addEventListener('click', function(evt){
+  if (evt.target === editForm) {
+    closeModal(editForm);
+  }
+  if (evt.target === newForm) {
+    closeModal(newForm);
+  }
+});
+
+///
+
+///card.js
 
 const removeCard = (card) => {
   card.remove();
 }
 
-const createCard = (card, removeCard) => {
+const likeCard = (likeButton) => {
+  likeButton.classList.toggle('card__like-button_is-active');
+}
+
+const openCard = (openClick) => {
+  openClick.classList.toggle('popup_is-opened');
+}
+
+const createCard = (card, removeCard, likeCard) => {
   const cardTemplate = document.querySelector('#card-template').content;
   const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
 
@@ -18,64 +74,71 @@ const createCard = (card, removeCard) => {
 
   cardElement.querySelector('.card__delete-button').addEventListener('click', () => removeCard(cardElement));
 
+  const likeButton = cardElement.querySelector('.card__like-button');
+  likeButton.addEventListener('click', () => likeCard(likeButton));
+
+  const openClick = cardElement.querySelector('.card__image');
+  openClick.addEventListener('click', () => openCard(imagePopap));
+  
+
   return cardElement;
 }
 
+///
+
+
+
 initialCards.forEach((card) => {
-  cardContainer.append(createCard(card, removeCard));
+  cardContainer.append(createCard(card, removeCard, likeCard));
 });
 
 ////////
 
-const editButton = document.querySelector('.profile__edit-button');
+function handleEditFormSubmit(evt) {
+    evt.preventDefault();
+    const name = nameInput.value;
+    const job = jobInput.value;
+
+    profileTitle.textContent = name;
+    profileDescription.textContent = job;
+    closeModal(editForm);
+}
+
 editButton.addEventListener('click', function(evt){
-  const editForm = document.querySelector('.popup_type_edit');
   openModal(editForm);
-  const closeButton = document.querySelector('.popup__close');
+  const closeButton = editForm.querySelector('.popup__close');
   closeButton.addEventListener('click', function(evt) {
     closeModal(editForm);
   });
-  document.addEventListener('keydown', function(evt) {
-    if (evt.key === 'Escape') {
-      closeModal(editForm);
-    }
-  });
-  document.addEventListener('click', function(evt){
-    if (evt.target === editForm) {
-      closeModal(editForm);
-    }
-  });
-
-  // Находим поля формы в DOM
-  const nameInput = document.querySelector('.popup__input_type_name');
-  const jobInput = document.querySelector('.popup__input_type_description');
-  
-  const profileTitle = document.querySelector('.profile__title');
-  const profileDescription = document.querySelector('.profile__description');
 
   nameInput.value = profileTitle.textContent;
   jobInput.value = profileDescription.textContent;
-  // Обработчик «отправки» формы, хотя пока
-  // она никуда отправляться не будет
-  function handleFormSubmit(evt) {
-      evt.preventDefault();
-      const name = nameInput.value;
-      const job = jobInput.value;
-  
-      profileTitle.textContent = name;
-      profileDescription.textContent = job;
-      closeModal(editForm);
-  }
-  
-  // Прикрепляем обработчик к форме:
-  // он будет следить за событием “submit” - «отправка»
-  editForm.addEventListener('submit', handleFormSubmit);
+
+  editForm.addEventListener('submit', handleEditFormSubmit);
 });
 
-function openModal(element) {
-  element.classList.add('popup_is-opened');
-};
 
-function closeModal(element) {
-  element.classList.remove('popup_is-opened');
-};
+////////
+
+function handleAddFormSubmit(evt) {
+    evt.preventDefault();
+    const cardName = cardNameInput.value;
+    const url = urlInput.value;
+    const card = {
+      name: cardName,
+      link: url
+    }
+    cardContainer.insertBefore(createCard(card, removeCard, likeCard), cardContainer.firstChild)  ;
+    cardNameInput.value = '';
+    urlInput.value = '';
+    closeModal(newForm);
+}
+
+addButton.addEventListener('click', function(evt){
+  openModal(newForm);
+  const closeButton = newForm.querySelector('.popup__close');
+  closeButton.addEventListener('click', function(evt) {
+    closeModal(newForm);
+  });
+  newForm.addEventListener('submit', handleAddFormSubmit);
+  });
