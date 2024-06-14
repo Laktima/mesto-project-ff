@@ -26,16 +26,12 @@ const cardNameInput = document.querySelector('.popup__input_type_card-name');
 const cardImage = cardPopup.querySelector('.popup__image');
 const cardCaption = cardPopup.querySelector('.popup__caption');
 
-const openCard = (cardPopup, card) => {
+const openCard = (card) => {
   cardImage.src = card.link;
   cardCaption.textContent = card.name;
   cardImage.alt = card.name;
   openModal(cardPopup);
   };
-  
-cardPopup.querySelector('.popup__close').addEventListener('click', function(evt) {
-  closeModal(cardPopup);
-});
 
 ////////
 

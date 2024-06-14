@@ -1,5 +1,3 @@
-const imagePopup = document.querySelector('.popup_type_image');
-
 export const removeCard = (card) => {
   card.remove();
 };
@@ -22,7 +20,7 @@ export const createCard = (card, removeCard, likeCard, openCard) => {
   const likeButton = cardElement.querySelector('.card__like-button');
   likeButton.addEventListener('click', () => likeCard(likeButton));
   
-  cardImage.addEventListener('click', () => openCard(imagePopup, card));
+  cardImage.addEventListener('click', () => openCard(card));
 
   return cardElement;
 };
