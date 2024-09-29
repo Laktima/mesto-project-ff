@@ -1,14 +1,3 @@
-import { clearValidation } from "../validation";
-
-const options = {
-  formSelector: '.popup__form',
-  inputSelector: '.popup__input',
-  submitButtonSelector: '.popup__button',
-  inactiveButtonClass: 'popup__button_disabled',
-  inputErrorClass: 'popup__input_type_error',
-  errorClass: 'popup__error_visible'
-}
-
 export function openModal(element) {
   element.classList.remove('popup_is-animated');
   element.classList.add('popup_is-opened');
@@ -29,16 +18,10 @@ function handleKeyDown(evt) {
   }
 }
   
-export function closeModal(element) {
+export function closeModal(element, options) {
   document.removeEventListener('keydown', handleKeyDown);
   element.removeEventListener('click', handleClick);
 
   element.classList.remove('popup_is-opened');
   element.classList.add('popup_is-animated');
-
-  clearValidation(options, element);
-  const inputElements = element.querySelectorAll(options.inputSelector);
-  inputElements.forEach((inputElement) =>{
-    inputElement.value = ''
-  })
 };

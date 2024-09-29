@@ -3,7 +3,7 @@ import { initialCards } from './scripts/cards.js';
 import { openModal, closeModal } from './scripts/components/modal.js';
 import { removeCard, likeCard, createCard } from './scripts/components/card.js';
 
-import { enableValidation } from './scripts/validation.js';
+import { enableValidation, clearValidation } from './scripts/validation.js';
 import { getInitialCards, getUserInfo, editUserInfo, createNewCard, editUserAvatar } from './scripts/api.js';
 
 const cardContainer = document.querySelector('.places__list');
@@ -45,9 +45,9 @@ const options = {
   formSelector: '.popup__form',
   inputSelector: '.popup__input',
   submitButtonSelector: '.popup__button',
-  inactiveButtonClass: 'popup__button_disabled',
-  inputErrorClass: 'popup__input_type_error',
-  errorClass: 'popup__error_visible'
+  inactiveButtonClass: 'button-inactive',
+  inputErrorClass: 'popup__input_error',
+  errorClass: 'popup__span_error'
 }
 
 const openCard = (card) => {
@@ -91,6 +91,8 @@ editButton.addEventListener('click', function(evt){
   nameInput.value = profileTitle.textContent;
   jobInput.value = profileDescription.textContent;
   
+  clearValidation(options, editPopup);
+  
 });
 
 //////
@@ -117,6 +119,11 @@ avatarPopup.querySelector('.popup__form').addEventListener('submit', handleAvata
 
 avatarEditButton.addEventListener('click', function(evt){
   openModal(avatarPopup);
+  clearValidation(options, avatarPopup);
+  const inputElements = avatarPopup.querySelectorAll(options.inputSelector);
+  inputElements.forEach((inputElement) =>{
+    inputElement.value = ''
+  })
 })
     
 ////////
@@ -149,6 +156,11 @@ newPopup.querySelector('.popup__form').addEventListener('submit', handleAddFormS
         
 addButton.addEventListener('click', function(evt){
   openModal(newPopup);
+  clearValidation(options, newPopup);
+  const inputElements = newPopup.querySelectorAll(options.inputSelector);
+  inputElements.forEach((inputElement) =>{
+    inputElement.value = ''
+  })
 });
 
 ///

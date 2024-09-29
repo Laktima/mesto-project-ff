@@ -13,27 +13,13 @@ export const removeCard = (card, cardId) => {
 export const likeCard = (likeButton, cardId, likeCounter) => {
   /*likeButton.classList.toggle('card__like-button_is-active');*/
 
-  if (!likeButton.classList.contains('card__like-button_is-active')) {
-    setLike(cardId)
-    .then((res) =>{
-      likeButton.classList.add('card__like-button_is-active')
-      updateLikeInfo(res, likeCounter);
-    })
-    .catch((err) => {
-      console.log(err);
-    })
-  }
-  else {
-    deleteLike(cardId)
-    .then((res) =>{
-      likeButton.classList.remove('card__like-button_is-active')
-      updateLikeInfo(res, likeCounter);
-    })
-    .catch((err) => {
-      console.log(err);
-    })
-  }
-
+  const likeMethod = likeButton.classList.contains('card__like-button_is-active') ? deleteLike : setLike;
+    likeMethod(cardId) 
+      .then((res) => {
+        likeButton.classList.toggle('card__like-button_is-active') 
+        updateLikeInfo(res, likeCounter); 
+      })
+    .catch(err => console.log(err));
 };
 
 export const createCard = (card, removeCard, likeCard, openCard, userId) => {
